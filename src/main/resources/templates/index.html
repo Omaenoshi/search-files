@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Duplicate Files Finder</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container form-container">
+        <h1 class="text-center">Duplicate Files Finder</h1>
+
+        <form id="searchForm" action="/search" method="post" class="form-inline justify-content-center">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="directoryPath" class="sr-only">Enter Directory Path:</label>
+                <input type="text" class="form-control" id="directoryPath" name="directoryPath" placeholder="Enter directory path..." required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Search</button>
+        </form>
+
+        <div th:if="${error != null}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div id="result">
+            <ul th:if="${duplicates != null}">
+                <li th:each="entry, groupIndex : ${duplicates}">
+                    <p th:text="'Group ' + ${groupIndex.index + 1}"></p>
+                    <ul>
+                        <li th:each="fileName, iterStat : ${entry.value}">
+                            <span th:text="${fileName}" th:if="${iterStat.index != 0} + ', '"></span>
+                            <span th:if="${iterStat.index == iterStat.size - 1}"></span>
+                        </li>
+                    </ul>
+                    <br/>
+                </li>
+            </ul>
+            <p th:if="${duplicates == null}">No duplicate files found.</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
